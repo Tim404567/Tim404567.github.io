@@ -77,6 +77,11 @@ function MakeShop() {
 
 function ChangeMonster(ID) {
     currentMonster = ID
+
+    if(currentMonster == -1) {
+        currentMonster = 0
+    }
+
     const MonsterHPLabel = document.querySelector("#MonsterHP")
     const MessageLog = document.querySelector("#MessageLog")
     MonsterHP = Monsters[currentMonster].HP
