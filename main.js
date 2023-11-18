@@ -82,6 +82,12 @@ function ChangeMonster(ID) {
     MonsterAttack = Monsters[currentMonster].Attack
     PlayerHP = MaxPlayerHP
     MonsterHPLabel.innerHTML = MonsterHPLabel.innerHTML = Monsters[currentMonster].Name + ": " + MonsterHP + "HP"
+
+    if(Monsters[currentMonster].Killcount > 1) {
+        MessageLog.innerHTML = "Killed "+ Monsters[currentMonster].Killcount+ " " + Monsters[currentMonster].Name + "s" + "."
+    } else {
+        MessageLog.innerHTML = "Killed "+ Monsters[currentMonster].Killcount+ " " + Monsters[currentMonster].Name + "."
+    }
 }
 
 document.addEventListener("DOMContentLoaded", (event) => {
