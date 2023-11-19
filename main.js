@@ -108,6 +108,12 @@ let DefaultMaxPlayerHP = 10
 let MaxPlayerHP = 10
 let PlayerHP = 10
 let PlayerAttack = Weapons[currentWeapon].Attack
+let noAscension = false
+if(localStorage.getItem("noAscension") != null) {
+    noAscension = localStorage.getItem("noAscension")
+} else {
+    localStorage.setItem("noAscension", false)
+}
 
 let MonsterHP = Monsters[currentMonster].HP
 let MonsterAttack = Monsters[currentMonster].Attack
@@ -127,9 +133,15 @@ function MakeShop() {
         div.innerHTML = `
             <p> ${element.Name} <\p>
             <p> ${element.Description} <\p>
-            <p> Power: ${element.Attack}<\p>
 
         `
+
+        if(localStorage.getItem("Ascensions") != null) {
+            div.innerHTML += `\n<p> Power: ${element.Attack * (parseInt(localStorage.getItem("Ascensions")) + 1)}<\p></p>`
+        } else {
+            div.innerHTML += `\n<p> Power: ${element.Attack}<\p>`
+        }
+
         if(element.hasOwnProperty("HealthBonus")) {
             div.innerHTML += `\n<p> Health Bonus: ${element.HealthBonus}HP <\p>`
         }
@@ -215,6 +227,10 @@ document.addEventListener("DOMContentLoaded", (event) => {
     } else {
         GoldLabel.innerHTML = "Gold: " + Gold
     }
+
+    if(localStorage.getItem("Ascensions") != null) {
+        PlayerAttack *= (parseInt(localStorage.getItem("Ascensions")) + 1)
+    }
 });
 
 function BuyWeapon(ID) {
@@ -259,9 +275,16 @@ function attack() {
     const MessageLog = document.querySelector("#MessageLog")
     const GoldLabel = document.querySelector("#Gold")
     const PrestigeButton = document.querySelector("#PrestigeButton")
+    const noAscensionButton = document.querySelector("#NoAscension")
 
     if(HighestMonster >= 6 & Prestiged > 1) {
         PrestigeButton.style.visibility = "visible"
+    }
+
+    if(localStorage.getItem("Ascensions") != null) {
+        const noAscensionButton = document.querySelector("#NoAscension")
+        noAscensionButton.style.visibility = "visible"
+        noAscensionButton.textContent = "Auto Ascend = " + !noAscension
     }
 
     if(MonsterHP <=0) {
@@ -320,6 +343,12 @@ function ToggleLockMonster() {
     const LockMonsterButton = document.querySelector("#LockMonster")
     LockMonsterButton.textContent = "Lock Monster = " + !lockMonster
     lockMonster = !lockMonster
+}
+
+function TogglenoAscension() {
+    const noAscensionButton = document.querySelector("#NoAscension")
+    noAscensionButton.textContent = "Auto Ascend = " + !noAscension
+    noAscension = !noAscension
 }
 
 function Gameloop() {

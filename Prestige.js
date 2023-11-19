@@ -28,7 +28,7 @@ function PrestigeContent(Prestiged, Monsters = [], Weapons = []) {
                 "Attack": 10,
                 "Description": "Completely unrelated to the Monsters that attacked the Kingom. Might as well fight him for good measure, though.",
                 "Killcount": 0,
-                "Gold": 25
+                "Gold": 70
             }
         )
         Weapons.push(
@@ -56,6 +56,28 @@ function PrestigeContent(Prestiged, Monsters = [], Weapons = []) {
             },
         )
     }
+
+    let noAscension = false
+    if(localStorage.getItem("noAscension") != null) {
+        noAscension = localStorage.getItem("noAscension")
+    } else {
+        localStorage.setItem("noAscension", false)
+    }
+
+    if(Prestiged >= 1000 & localStorage.getItem("Ascensions") == null) {
+        localStorage.setItem("Ascensions", 1)
+        localStorage.setItem("Prestiged", 0)
+        location.href = "./Ascend.html"
+    }
+    if(noAscension == false) {
+        if(Prestiged >= 100 & localStorage.getItem("Ascensions") != null) {
+            localStorage.setItem("Ascensions", parseInt(localStorage.getItem("Ascensions")+1))
+            localStorage.setItem("Prestiged", 0)
+            location.href = "./Ascend.html"
+        }
+    }
+
+
 
     const Returned = [Monsters, Weapons]
     return Returned
