@@ -89,12 +89,6 @@ let Weapons = [
         "Price": 70,
         "Owned": false
     }, {
-        "Name": "Enma's RPG",
-        "Attack": 18,
-        "Description": "What do we say to the God of Death? - Nothing, he's only in the third Game.",
-        "Price": 70,
-        "Owned": false
-    }, {
         "Name": "The Big Crunch",
         "Attack": 25,
         "Description": "Requires 1.79e308 useless Paperclips.",
