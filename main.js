@@ -324,6 +324,10 @@ function ToggleLockMonster() {
 }
 
 function Gameloop() {
+    if(currentMonster > Monsters.length - 1) {
+        currentMonster = Monsters.length - 1
+        HighestMonster = Monsters.length - 1
+    }
     const MessageLog = document.querySelector("#MessageLog")
     PlayerHP = PlayerHP - MonsterAttack
     const PlayerHPLabel = document.querySelector("#PlayerHP")
