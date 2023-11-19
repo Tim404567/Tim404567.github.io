@@ -3,16 +3,51 @@ let Monsters = [
         "Name": "Goblin",
         "HP": 3,
         "Attack": 1,
-        "Description": "Placeholder",
+        "Description": "A small Goblin. No match for an RPG.",
         "Killcount": 0,
         "Gold": 1
     }, {
         "Name": "Hobgoblin",
-        "HP": 3,
+        "HP": 7,
         "Attack": 1,
-        "Description": "Placeholder",
+        "Description": "A slightly bigger Goblin.",
         "Killcount": 0,
-        "Gold": 1
+        "Gold": 2
+    }, {
+        "Name": "Skeleton",
+        "HP": 12,
+        "Attack": 2,
+        "Description": "Sticks and Stones may Break their Bones, but RPGs are much more effective.",
+        "Killcount": 0,
+        "Gold": 3
+    }, {
+        "Name": "Dragon",
+        "HP": 17,
+        "Attack": 2,
+        "Description": "Very Intimating. Much less intimidating after being hit by an RPG, though.",
+        "Killcount": 0,
+        "Gold": 5
+    }, {
+        "Name": "Dungeons",
+        "HP": 20,
+        "Attack": 3,
+        "Description": "Wait, i think i got the order mixed up...",
+        "Killcount": 0,
+        "Gold": 7
+    }, {
+        "Name": "Wizard of the Coast",
+        "HP": 25,
+        "Attack": 3,
+        "Description": "Infamous for his immense Greed.",
+        "Killcount": 0,
+        "Gold": 10
+    }, {
+        "Name": "Angel with a shotgun",
+        "HP": 35,
+        "Attack": 4,
+        "Description": "Known for his poor taste in Pop Music.",
+        "Killcount": 0,
+        "Gold": 15
     }
 ]
 
@@ -29,7 +64,43 @@ let Weapons = [
         "Description": "The marketing doesn't lie.",
         "Price": 10,
         "Owned": false
-    }   
+    }, {
+        "Name": "Holy RPG",
+        "Attack": 5,
+        "Description": "Holy Hand Grenades not included.",
+        "Price": 20,
+        "Owned": false
+    }, {
+        "Name": "Dark RPG",
+        "Attack": 7,
+        "Description": "The Ultimate RPG in Terms of attack and defense.",
+        "Price": 35,
+        "Owned": false
+    }, {
+        "Name": "Ultima Weapon",
+        "Attack": 12,
+        "Description": "...said weapon being an RPG.",
+        "Price": 50,
+        "Owned": false
+    }, {
+        "Name": "Enma's RPG",
+        "Attack": 18,
+        "Description": "What do we say to the God of Death? - Nothing, he's only in the third Game.",
+        "Price": 70,
+        "Owned": false
+    }, {
+        "Name": "Enma's RPG",
+        "Attack": 18,
+        "Description": "What do we say to the God of Death? - Nothing, he's only in the third Game.",
+        "Price": 70,
+        "Owned": false
+    }, {
+        "Name": "The Big Crunch",
+        "Attack": 25,
+        "Description": "Requires 1.79e308 useless Paperclips.",
+        "Price": 120,
+        "Owned": false
+    } 
 ]
 
 let currentMonster = 0
@@ -59,6 +130,7 @@ function MakeShop() {
             div.innerHTML = `
             <p> ${element.Name} <\p>
             <p> ${element.Description} <\p>
+            <p> Power: ${element.Attack}<\p>
             <p> Cost: ${element.Price} Gold <\p>
             <input type="button" value="Buy" onclick="BuyWeapon(${i})"/>
         `
@@ -66,6 +138,7 @@ function MakeShop() {
             div.innerHTML = `
             <p> ${element.Name} <\p>
             <p> ${element.Description} <\p>
+            <p> Power: ${element.Attack}<\p>
             <p> Cost: ${element.Price} Gold <\p>
             <input type="button" value="Equip" onclick="EquipWeapon(${i})"/>
         `
@@ -81,13 +154,14 @@ function ChangeMonster(ID) {
     if(currentMonster == -1) {
         currentMonster = 0
     }
-
+    const MonsterDescriptionLabel = document.querySelector("#MonsterDescription")
     const MonsterHPLabel = document.querySelector("#MonsterHP")
     const MessageLog = document.querySelector("#MessageLog")
     MonsterHP = Monsters[currentMonster].HP
     MonsterAttack = Monsters[currentMonster].Attack
     PlayerHP = MaxPlayerHP
     MonsterHPLabel.innerHTML = MonsterHPLabel.innerHTML = Monsters[currentMonster].Name + ": " + MonsterHP + "HP"
+    MonsterDescriptionLabel.innerHTML = Monsters[currentMonster].Description
 
     if(Monsters[currentMonster].Killcount > 1) {
         MessageLog.innerHTML = "Killed "+ Monsters[currentMonster].Killcount+ " " + Monsters[currentMonster].Name + "s" + "."
@@ -104,10 +178,11 @@ document.addEventListener("DOMContentLoaded", (event) => {
     const WeaponDescriptionLabel = document.querySelector("#WeaponDescription")
     const NextMonster = document.querySelector("#NextMonster")
     const PreviousMonster = document.querySelector("#PreviousMonster")
+    const MonsterDescriptionLabel = document.querySelector("#MonsterDescription")
     AttackButton.addEventListener("click", attack)
     RPGLabel.innerHTML = "Current RPG: " + Weapons[currentWeapon].Name
     WeaponDescriptionLabel.innerHTML = Weapons[currentWeapon].Description
-
+    MonsterDescriptionLabel.innerHTML = Monsters[currentMonster].Description
     MonsterHPLabel.innerHTML = Monsters[currentMonster].Name + ": " + MonsterHP + "HP"
     PlayerHPLabel.innerHTML = "You: " + PlayerHP + "HP"
     setInterval(Gameloop, 1000)
@@ -171,8 +246,12 @@ function attack() {
             MessageLog.innerHTML = "Killed "+ Monsters[currentMonster].Killcount+ " " + Monsters[currentMonster].Name + "."
         }
 
+        if(currentMonster == Monsters.length-1) {
+            location.href = "./Ending.html"
+        }
+
         if(Monsters.length-1 > currentMonster) {
-            currentMonster++
+            ChangeMonster(currentMonster+1)
             HighestMonster++
         }
 
@@ -202,5 +281,6 @@ function Gameloop() {
             MonsterHPLabel.innerHTML = Monsters[currentMonster].Name + ": " + MonsterHP + "HP"
         }
         PlayerHP = MaxPlayerHP
-    } 
+    }
+    
 }
