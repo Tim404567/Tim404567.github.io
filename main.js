@@ -260,7 +260,7 @@ function attack() {
     const GoldLabel = document.querySelector("#Gold")
     const PrestigeButton = document.querySelector("#PrestigeButton")
 
-    if(currentMonster >= 6 & Prestiged > 1) {
+    if(HighestMonster >= 6 & Prestiged > 1) {
         PrestigeButton.style.visibility = "visible"
     }
 
