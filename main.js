@@ -276,6 +276,9 @@ function attack() {
     const GoldLabel = document.querySelector("#Gold")
     const PrestigeButton = document.querySelector("#PrestigeButton")
     const noAscensionButton = document.querySelector("#NoAscension")
+    if(noAscension != null) {
+        noAscensionButton.textContent = "No Auto Ascend = " + noAscension
+    }
 
     if(HighestMonster >= 6 & Prestiged > 1) {
         PrestigeButton.style.visibility = "visible"
@@ -284,7 +287,9 @@ function attack() {
     if(localStorage.getItem("Ascensions") != null) {
         const noAscensionButton = document.querySelector("#NoAscension")
         noAscensionButton.style.visibility = "visible"
-        noAscensionButton.textContent = "Auto Ascend = " + !noAscension
+        if(noAscension != null) {
+            noAscensionButton.textContent = "No Auto Ascend = " + noAscension
+        }
     }
 
     if(MonsterHP <=0) {
@@ -347,8 +352,11 @@ function ToggleLockMonster() {
 
 function TogglenoAscension() {
     const noAscensionButton = document.querySelector("#NoAscension")
-    noAscensionButton.textContent = "Auto Ascend = " + !noAscension
     noAscension = !noAscension
+    localStorage.setItem("noAscension", noAscension)
+    if(noAscension != null) {
+        noAscensionButton.textContent = "No Auto Ascend = " + noAscension
+    }
 }
 
 function Gameloop() {
@@ -373,19 +381,21 @@ function Gameloop() {
         PlayerHP = MaxPlayerHP
     }
 
-    let noAscension = false
+    let noAscension
     if(localStorage.getItem("noAscension") != null) {
         noAscension = localStorage.getItem("noAscension")
+        console.log("test")
     } else {
         localStorage.setItem("noAscension", false)
     }
 
-    if(Prestiged >= 100 & localStorage.getItem("Ascensions") == null) {
+    if(Prestiged >= 100 && localStorage.getItem("Ascensions") == null) {
+        console.log("test")
         localStorage.setItem("Ascensions", 1)
         localStorage.setItem("Prestiged", 0)
         location.href = "./Ascend.html"
     }
-    if(noAscension == false) {
+    if(noAscension === "false") {
         if(Prestiged >= 100) {
             localStorage.setItem("Ascensions", parseInt(localStorage.getItem("Ascensions")+1))
             localStorage.setItem("Prestiged", 0)
