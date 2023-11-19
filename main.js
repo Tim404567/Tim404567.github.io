@@ -372,6 +372,26 @@ function Gameloop() {
 
         PlayerHP = MaxPlayerHP
     }
+
+    let noAscension = false
+    if(localStorage.getItem("noAscension") != null) {
+        noAscension = localStorage.getItem("noAscension")
+    } else {
+        localStorage.setItem("noAscension", false)
+    }
+
+    if(Prestiged >= 100 & localStorage.getItem("Ascensions") == null) {
+        localStorage.setItem("Ascensions", 1)
+        localStorage.setItem("Prestiged", 0)
+        location.href = "./Ascend.html"
+    }
+    if(noAscension == false) {
+        if(Prestiged >= 100 & localStorage.getItem("Ascensions") != null) {
+            localStorage.setItem("Ascensions", parseInt(localStorage.getItem("Ascensions")+1))
+            localStorage.setItem("Prestiged", 0)
+            location.href = "./Ascend.html"
+        }
+    }
     
 }
 
