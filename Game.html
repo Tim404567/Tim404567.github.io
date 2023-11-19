@@ -6,6 +6,7 @@
     <title>Document</title>
     <link rel="stylesheet" href="style.css">
     <script src="main.js"></script>
+    <script src="Prestige.js"></script>
     <link rel="shortcut icon" type="image/x-icon" href="favicon.ico?">
 </head>
 <body>
@@ -19,9 +20,10 @@
     <p id="PlayerHP"></p>
     <p id="MonsterHP"></p>
     <p id="MonsterDescription"></p>
+    <button onclick="Prestige()" style="visibility: hidden;" id="PrestigeButton">Prestige</button>
 
     <p id="Gold">Gold: 0</p>
-    <button id="PreviousMonster">Previous Monster</button> <button id="NextMonster">Next Monster</button>
+    <button id="PreviousMonster">Previous Monster</button> <button id="NextMonster">Next Monster</button> <button id="LockMonster" onclick="ToggleLockMonster()" id="LockMonster">Lock Monster</button>
     <br>
     <button id="Attack">Fire!</button>
     <p id="MessageLog">Nothing has happened so far.</p>

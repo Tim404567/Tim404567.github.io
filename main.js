@@ -100,8 +100,11 @@ let Weapons = [
 let currentMonster = 0
 let HighestMonster = 0
 let currentWeapon = 0
+let PrestigeGain = 1
 
-
+let Prestiged = 1
+let lockMonster = false
+let DefaultMaxPlayerHP = 10
 let MaxPlayerHP = 10
 let PlayerHP = 10
 let PlayerAttack = Weapons[currentWeapon].Attack
@@ -120,23 +123,25 @@ function MakeShop() {
 
         const div = document.createElement('div')
         div.className = 'Weapon'
-        if(element.Owned == false) {
-            div.innerHTML = `
+
+        div.innerHTML = `
             <p> ${element.Name} <\p>
             <p> ${element.Description} <\p>
             <p> Power: ${element.Attack}<\p>
-            <p> Cost: ${element.Price} Gold <\p>
-            <input type="button" value="Buy" onclick="BuyWeapon(${i})"/>
+
         `
-        } else {
-            div.innerHTML = `
-            <p> ${element.Name} <\p>
-            <p> ${element.Description} <\p>
-            <p> Power: ${element.Attack}<\p>
-            <p> Cost: ${element.Price} Gold <\p>
-            <input type="button" value="Equip" onclick="EquipWeapon(${i})"/>
-        `
+        if(element.hasOwnProperty("HealthBonus")) {
+            div.innerHTML += `\n<p> Health Bonus: ${element.HealthBonus}HP <\p>`
         }
+
+        div.innerHTML += `<p> Cost: ${element.Price} Gold </p>`
+
+        if(element.Owned == false) {
+            div.innerHTML += `\n<input type="button" value="Buy" onclick="BuyWeapon(${i})"/>`
+        } else if(element.Owned == true) {
+            div.innerHTML += `\n<input type="button" value="Equip" onclick="EquipWeapon(${i})"/>
+        `}
+
 
         ShopDiv.appendChild(div);
     }
@@ -158,9 +163,11 @@ function ChangeMonster(ID) {
     MonsterDescriptionLabel.innerHTML = Monsters[currentMonster].Description
 
     if(Monsters[currentMonster].Killcount > 1) {
-        MessageLog.innerHTML = "Killed "+ Monsters[currentMonster].Killcount+ " " + Monsters[currentMonster].Name + "s" + "."
+        MessageLog.innerHTML = "Killed "+ Monsters[currentMonster].Killcount + " " + Monsters[currentMonster].Name + "s" + "."
     } else {
         MessageLog.innerHTML = "Killed "+ Monsters[currentMonster].Killcount+ " " + Monsters[currentMonster].Name + "."
+    } if(Monsters[currentMonster].Killcount == 0) {
+        MessageLog.innerHTML = "Killed "+ parseInt(Monsters[currentMonster].Killcount+1) + " " + Monsters[currentMonster].Name + "."
     }
 }
 
@@ -173,6 +180,13 @@ document.addEventListener("DOMContentLoaded", (event) => {
     const NextMonster = document.querySelector("#NextMonster")
     const PreviousMonster = document.querySelector("#PreviousMonster")
     const MonsterDescriptionLabel = document.querySelector("#MonsterDescription")
+    const GoldLabel = document.querySelector("#Gold")
+
+    Load()
+    Values = PrestigeContent(Prestiged, Monsters, Weapons)
+    Monsters = Values[0]
+    Weapons = Values[1]
+
     AttackButton.addEventListener("click", attack)
     RPGLabel.innerHTML = "Current RPG: " + Weapons[currentWeapon].Name
     WeaponDescriptionLabel.innerHTML = Weapons[currentWeapon].Description
@@ -180,7 +194,9 @@ document.addEventListener("DOMContentLoaded", (event) => {
     MonsterHPLabel.innerHTML = Monsters[currentMonster].Name + ": " + MonsterHP + "HP"
     PlayerHPLabel.innerHTML = "You: " + PlayerHP + "HP"
     setInterval(Gameloop, 1000)
+    setInterval(Save, 3000)
     MakeShop()
+    EquipWeapon(currentWeapon)
 
     NextMonster.addEventListener("click", function() {
         if(currentMonster < HighestMonster) {
@@ -193,6 +209,12 @@ document.addEventListener("DOMContentLoaded", (event) => {
             ChangeMonster(currentMonster-1)
         }
     })
+
+    if(Prestiged > 1) {
+        GoldLabel.innerHTML = "Gold: " + Gold + "   (Prestige Multiplier: " + Prestiged + "x)"
+    } else {
+        GoldLabel.innerHTML = "Gold: " + Gold
+    }
 });
 
 function BuyWeapon(ID) {
@@ -201,13 +223,8 @@ function BuyWeapon(ID) {
 
     if(Gold >= Weapons[ID].Price) {
         Gold - Weapons[ID].Price
-        currentWeapon = ID
-        PlayerAttack = Weapons[ID].Attack
-        RPGLabel.innerHTML = "Current RPG: " + Weapons[ID].Name
-        WeaponDescriptionLabel.innerHTML = Weapons[ID].Description
-        Weapons[ID].Owned = true
+        EquipWeapon(ID)
         MakeShop()
-        MessageLog.innerHTML = "Bought " + Weapons[ID].Name + "."
     } else {
         MessageLog.innerHTML = "You can't afford " + Weapons[ID].Name + "."
     }
@@ -224,38 +241,86 @@ function EquipWeapon(ID) {
     RPGLabel.innerHTML = "Current RPG: " + Weapons[ID].Name
     WeaponDescriptionLabel.innerHTML = Weapons[ID].Description
     MessageLog.innerHTML = "Equipped " + Weapons[ID].Name + "."
+
+    if(Weapons[ID].hasOwnProperty('HealthBonus')) {
+        MaxPlayerHP = DefaultMaxPlayerHP + Weapons[ID].HealthBonus
+    } else {
+        MaxPlayerHP = DefaultMaxPlayerHP
+    }
 }
 
 function attack() {
+    if(currentMonster > Monsters.length - 1) {
+        currentMonster = Monsters.length - 1
+        HighestMonster = Monsters.length - 1
+    }
     const MonsterHPLabel = document.querySelector("#MonsterHP")
     MonsterHP=MonsterHP-PlayerAttack
     const MessageLog = document.querySelector("#MessageLog")
     const GoldLabel = document.querySelector("#Gold")
+    const PrestigeButton = document.querySelector("#PrestigeButton")
+
+    if(currentMonster >= 6 & Prestige > 1) {
+        PrestigeButton.style.visibility = "visible"
+    }
 
     if(MonsterHP <=0) {
         Monsters[currentMonster].Killcount++
         if(Monsters[currentMonster].Killcount > 1) {
-            MessageLog.innerHTML = "Killed "+ Monsters[currentMonster].Killcount+ " " + Monsters[currentMonster].Name + "s" + "."
+            MessageLog.innerHTML = "Killed "+ Monsters[currentMonster].Killcount + " " + Monsters[currentMonster].Name + "s" + "."
         } else {
-            MessageLog.innerHTML = "Killed "+ Monsters[currentMonster].Killcount+ " " + Monsters[currentMonster].Name + "."
+            MessageLog.innerHTML = "Killed "+ Monsters[currentMonster].Killcount + " " + Monsters[currentMonster].Name + "."
         }
 
-        if(currentMonster == Monsters.length-1) {
-            location.href = "./Ending.html"
+        if(currentMonster >= Monsters.length-1) {
+            if(currentMonster > 6) {
+                PrestigeGain++
+            }
+            Prestige()
         }
 
-        if(Monsters.length-1 > currentMonster) {
-            ChangeMonster(currentMonster+1)
-            HighestMonster++
+        if(lockMonster == false) {
+            if(Monsters.length-1 > currentMonster) {
+                ChangeMonster(currentMonster+1)
+                HighestMonster++
+            }
         }
 
         MonsterHP = Monsters[currentMonster].HP
         MonsterAttack = Monsters[currentMonster].Attack
         PlayerHP = MaxPlayerHP
-        Gold = Gold + Monsters[currentMonster].Gold
-        GoldLabel.innerHTML = "Gold: " + Gold
+        Gold = Gold + (Monsters[currentMonster].Gold * Prestiged)
+        if(Prestiged > 1) {
+            GoldLabel.innerHTML = "Gold: " + Gold + "   (Prestige Multiplier: " + Prestiged + "x)"
+        } else {
+            GoldLabel.innerHTML = "Gold: " + Gold
+        }
+
     }
     MonsterHPLabel.innerHTML = MonsterHPLabel.innerHTML = Monsters[currentMonster].Name + ": " + MonsterHP + "HP"
+}
+
+function Prestige() {
+    if(HighestMonster >= 6) {
+        console.log("won2")
+        Prestiged = Prestiged + PrestigeGain
+        Gold = 0
+        currentWeapon = 0
+        currentMonster = 0
+        HighestMonster = 0
+        Weapons.forEach(element => {
+            element.Owned = false
+        });
+        Weapons[0].owned = true
+        Save()
+        location.href = "./Ending.html"
+    }
+}
+
+function ToggleLockMonster() {
+    const LockMonsterButton = document.querySelector("#LockMonster")
+    LockMonsterButton.textContent = "Lock Monster = " + !lockMonster
+    lockMonster = !lockMonster
 }
 
 function Gameloop() {
@@ -267,14 +332,69 @@ function Gameloop() {
     if(PlayerHP <= 0) {
         MonsterHP = Monsters[currentMonster].HP
         MessageLog.innerHTML = "You died."
-        if(currentMonster - 1 > -1) {
-            currentMonster--
-            let MonsterHP = Monsters[currentMonster].HP
-            let MonsterAttack = Monsters[currentMonster].Attack
-            const MonsterHPLabel = document.querySelector("#MonsterHP")
-            MonsterHPLabel.innerHTML = Monsters[currentMonster].Name + ": " + MonsterHP + "HP"
+        if(lockMonster==false) {
+            if(currentMonster - 1 > -1) {
+                ChangeMonster(currentMonster-1)
+            }
         }
+
         PlayerHP = MaxPlayerHP
     }
     
+}
+
+function Save() {
+    localStorage.setItem("Gold", Gold);
+    localStorage.setItem("CurrentWeapon", currentWeapon)
+    localStorage.setItem("CurrentMonster", currentMonster)
+    localStorage.setItem("HighestMonster", HighestMonster)
+    localStorage.setItem("Prestiged", Prestiged)
+    localStorage.setItem("PrestigeGain", PrestigeGain)
+    
+    const owned = []
+
+    Weapons.forEach(element => {
+        if(element.owned == null) {
+            element.owned = false
+        }
+    });
+
+    Weapons.forEach(element => {
+        owned.push(element.Owned)
+    });
+
+    localStorage.setItem("OwnedWeapons", JSON.stringify(owned))
+}
+
+function Load() {
+    IsSafe = true
+   ToCheck = ["Gold", "CurrentWeapon", "CurrentMonster", "HighestMonster", "OwnedWeapons", "Prestiged", "PrestigeGain"]
+   ToCheck.forEach(element => {
+        if(localStorage.getItem(element) == null) {
+            IsSafe = false
+        }
+   });
+   if(IsSafe) {
+    Gold = parseInt(localStorage.getItem("Gold"))
+    currentWeapon = parseInt(localStorage.getItem("CurrentWeapon"))
+    currentMonster = parseInt(localStorage.getItem("CurrentMonster"))
+    HighestMonster = parseInt(localStorage.getItem("HighestMonster"))
+    Prestiged = parseInt(localStorage.getItem("Prestiged"))
+    PrestigeGain = parseInt(localStorage.getItem("PrestigeGain"))
+    if(HighestMonster > Monsters.length - 1) {
+     HighestMonster = Monsters.length - 1
+    } if(currentMonster > Monsters.length - 1) {
+     currentMonster = Monsters.length - 1
+    }
+    const owned = JSON.parse(localStorage.getItem("OwnedWeapons"))
+ 
+    for (let i = 0; i < Weapons.length; i++) {
+     const element = Weapons[i];
+     element.Owned = owned[i]
+     
+    }
+ 
+    MakeShop()
+   }
+
 }
