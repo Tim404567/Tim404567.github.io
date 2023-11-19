@@ -58,8 +58,6 @@ function PrestigeContent(Prestiged, Monsters = [], Weapons = []) {
     }
 
     const Returned = [Monsters, Weapons]
-    console.log(Returned[0])
-    console.log(Returned[1])
     return Returned
 }
 

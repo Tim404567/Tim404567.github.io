@@ -302,7 +302,6 @@ function attack() {
 
 function Prestige() {
     if(HighestMonster >= 6) {
-        console.log("won2")
         Prestiged = Prestiged + PrestigeGain
         Gold = 0
         currentWeapon = 0
