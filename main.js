@@ -167,7 +167,7 @@ function ChangeMonster(ID) {
     } else {
         MessageLog.innerHTML = "Killed "+ Monsters[currentMonster].Killcount+ " " + Monsters[currentMonster].Name + "."
     } if(Monsters[currentMonster].Killcount == 0) {
-        MessageLog.innerHTML = "Killed "+ parseInt(Monsters[currentMonster].Killcount+1) + " " + Monsters[currentMonster].Name + "."
+        MessageLog.innerHTML = "Killed "+ parseInt(Monsters[currentMonster].Killcount) + " " + Monsters[currentMonster].Name + "."
     }
 }
 
