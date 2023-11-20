@@ -137,7 +137,8 @@ function MakeShop() {
         `
 
         if(localStorage.getItem("Ascensions") != null) {
-            div.innerHTML += `\n<p> Power: ${element.Attack * (parseInt(localStorage.getItem("Ascensions")) + 1)}<\p></p>`
+            let ascensions = parseInt(localStorage.getItem("Ascensions"))
+            div.innerHTML += `\n<p> Power: ${element.Attack * (ascensions+1)}<\p></p>`
         } else {
             div.innerHTML += `\n<p> Power: ${element.Attack}<\p>`
         }
@@ -261,7 +262,8 @@ function EquipWeapon(ID) {
     PlayerAttack = Weapons[ID].Attack
 
     if(localStorage.getItem("Ascensions") != null) {
-        PlayerAttack *= (parseInt(localStorage.getItem("Ascensions")) + 1)
+        let ascensions = parseInt(localStorage.getItem("Ascensions"))
+        PlayerAttack *= (ascensions+1)
     }
 	
     RPGLabel.innerHTML = "Current RPG: " + Weapons[ID].Name
@@ -401,6 +403,8 @@ function Gameloop() {
     if(noAscension === "false") {
         if(Prestiged >= 100) {
             let ascensions = parseInt(localStorage.getItem("Ascensions"))
+            Prestiged = 0
+            localStorage.setItem("Prestiged", Prestiged)
             localStorage.setItem("Ascensions", ascensions+1)
             location.href = "./Ascend.html"
         }
