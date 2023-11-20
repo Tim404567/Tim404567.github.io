@@ -255,6 +255,8 @@ function EquipWeapon(ID) {
     const MessageLog = document.querySelector("#MessageLog")
 
     currentWeapon = ID
+    Weapons[ID].Owned = true
+    Save()
     PlayerAttack = Weapons[ID].Attack
 
     if(localStorage.getItem("Ascensions") != null) {
