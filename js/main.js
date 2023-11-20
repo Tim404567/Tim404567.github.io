@@ -135,9 +135,9 @@ function MakeShop() {
             <p> ${element.Description} <\p>
 
         `
-
+	let ascensions = parseInt(localStorage.getItem("Ascensions"))
         if(localStorage.getItem("Ascensions") != null) {
-            div.innerHTML += `\n<p> Power: ${element.Attack * (parseInt(localStorage.getItem("Ascensions")) + 1)}<\p></p>`
+            div.innerHTML += `\n<p> Power: ${element.Attack * (ascensions+1)}<\p></p>`
         } else {
             div.innerHTML += `\n<p> Power: ${element.Attack}<\p>`
         }
@@ -261,7 +261,8 @@ function EquipWeapon(ID) {
     PlayerAttack = Weapons[ID].Attack
 
     if(localStorage.getItem("Ascensions") != null) {
-        PlayerAttack *= (parseInt(localStorage.getItem("Ascensions")) + 1)
+	let ascensions = parseInt(localStorage.getItem("Ascensions"))
+        PlayerAttack *= ascensions + 1
     }
 	
     RPGLabel.innerHTML = "Current RPG: " + Weapons[ID].Name
