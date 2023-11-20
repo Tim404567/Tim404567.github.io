@@ -235,6 +235,7 @@ function BuyWeapon(ID) {
 
     if(Gold >= Weapons[ID].Price) {
         Gold = Gold - Weapons[ID].Price
+        Weapons[ID].Owned = true
         EquipWeapon(ID)
         MakeShop()
 
@@ -393,13 +394,11 @@ function Gameloop() {
     let noAscension
     if(localStorage.getItem("noAscension") != null) {
         noAscension = localStorage.getItem("noAscension")
-        console.log("test")
     } else {
         localStorage.setItem("noAscension", false)
     }
 
     if(Prestiged >= 100 && localStorage.getItem("Ascensions") == null) {
-        console.log("test")
         localStorage.setItem("Ascensions", 1)
         localStorage.setItem("Prestiged", 0)
         location.href = "./Ascend.html"
