@@ -228,9 +228,6 @@ document.addEventListener("DOMContentLoaded", (event) => {
         GoldLabel.innerHTML = "Gold: " + Gold
     }
 
-    if(localStorage.getItem("Ascensions") != null) {
-        PlayerAttack *= (parseInt(localStorage.getItem("Ascensions")) + 1)
-    }
 });
 
 function BuyWeapon(ID) {
@@ -254,6 +251,11 @@ function EquipWeapon(ID) {
 
     currentWeapon = ID
     PlayerAttack = Weapons[ID].Attack
+
+    if(localStorage.getItem("Ascensions") != null) {
+        PlayerAttack *= (parseInt(localStorage.getItem("Ascensions")) + 1)
+    }
+	
     RPGLabel.innerHTML = "Current RPG: " + Weapons[ID].Name
     WeaponDescriptionLabel.innerHTML = Weapons[ID].Description
     MessageLog.innerHTML = "Equipped " + Weapons[ID].Name + "."
