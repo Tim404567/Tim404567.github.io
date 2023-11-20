@@ -124,7 +124,7 @@ function MakeShop() {
     const ShopDiv = document.querySelector("#Shop")
     ShopDiv.innerHTML = ""
 
-     for (let i = 0; i < Weapons.length; i++) {
+    for (let i = 0; i < Weapons.length; i++) {
         const element = Weapons[i];
 
         const div = document.createElement('div')
@@ -231,13 +231,18 @@ document.addEventListener("DOMContentLoaded", (event) => {
 });
 
 function BuyWeapon(ID) {
-    const RPGLabel = document.querySelector("#Weapon")
-    const WeaponDescriptionLabel = document.querySelector("#WeaponDescription")
+    const GoldLabel = document.querySelector("#Gold")
 
     if(Gold >= Weapons[ID].Price) {
         Gold = Gold - Weapons[ID].Price
         EquipWeapon(ID)
         MakeShop()
+
+        if(Prestiged > 1) {
+            GoldLabel.innerHTML = "Gold: " + Gold + "   (Prestige Multiplier: " + Prestiged + "x)"
+        } else {
+            GoldLabel.innerHTML = "Gold: " + Gold
+        }
     } else {
         MessageLog.innerHTML = "You can't afford " + Weapons[ID].Name + "."
     }
