@@ -406,6 +406,7 @@ function Gameloop() {
     if(noAscension === "false") {
         if(Prestiged >= 100) {
             localStorage.setItem("Ascensions", parseInt(localStorage.getItem("Ascensions"))+1)
+            console.log(localStorage.getItem("Ascensions"))
             localStorage.setItem("Prestiged", 0)
             location.href = "./Ascend.html"
         }
