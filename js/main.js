@@ -235,7 +235,7 @@ function BuyWeapon(ID) {
     const WeaponDescriptionLabel = document.querySelector("#WeaponDescription")
 
     if(Gold >= Weapons[ID].Price) {
-        Gold - Weapons[ID].Price
+        Gold = Gold - Weapons[ID].Price
         EquipWeapon(ID)
         MakeShop()
     } else {
