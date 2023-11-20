@@ -124,7 +124,7 @@ function MakeShop() {
     const ShopDiv = document.querySelector("#Shop")
     ShopDiv.innerHTML = ""
 
-     for (let i = 0; i < Weapons.length; i++) {
+    for (let i = 0; i < Weapons.length; i++) {
         const element = Weapons[i];
 
         const div = document.createElement('div')
@@ -231,13 +231,19 @@ document.addEventListener("DOMContentLoaded", (event) => {
 });
 
 function BuyWeapon(ID) {
-    const RPGLabel = document.querySelector("#Weapon")
-    const WeaponDescriptionLabel = document.querySelector("#WeaponDescription")
+    const GoldLabel = document.querySelector("#Gold")
 
     if(Gold >= Weapons[ID].Price) {
         Gold = Gold - Weapons[ID].Price
+        Weapons[ID].Owned = true
         EquipWeapon(ID)
         MakeShop()
+
+        if(Prestiged > 1) {
+            GoldLabel.innerHTML = "Gold: " + Gold + "   (Prestige Multiplier: " + Prestiged + "x)"
+        } else {
+            GoldLabel.innerHTML = "Gold: " + Gold
+        }
     } else {
         MessageLog.innerHTML = "You can't afford " + Weapons[ID].Name + "."
     }
@@ -250,6 +256,8 @@ function EquipWeapon(ID) {
     const MessageLog = document.querySelector("#MessageLog")
 
     currentWeapon = ID
+    Weapons[ID].Owned = true
+    Save()
     PlayerAttack = Weapons[ID].Attack
 
     if(localStorage.getItem("Ascensions") != null) {
@@ -390,10 +398,14 @@ function Gameloop() {
         localStorage.setItem("noAscension", false)
     }
 
+    if(Prestiged >= 100 && localStorage.getItem("Ascensions") == null) {
+        localStorage.setItem("Ascensions", 1)
+        localStorage.setItem("Prestiged", 0)
+        location.href = "./Ascend.html"
+    }
     if(noAscension === "false") {
         if(Prestiged >= 100) {
-            let ascensions = parseInt(localStorage.getItem("Ascensions"))
-            localStorage.setItem("Ascensions", ascensions+1)
+            localStorage.setItem("Ascensions", parseInt(localStorage.getItem("Ascensions"))+1)
             localStorage.setItem("Prestiged", 0)
             location.href = "./Ascend.html"
         }
