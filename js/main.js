@@ -262,7 +262,13 @@ function EquipWeapon(ID) {
     PlayerAttack = Weapons[ID].Attack
 
     if(localStorage.getItem("Ascensions") != null) {
-        let ascensions = parseInt(localStorage.getItem("Ascensions"))
+        let ascensions
+        if(localStorage.getItem("Ascensions" != null)) {
+            ascensions = parseInt(localStorage.getItem("Ascensions"))
+        } else {
+            ascensions = 0
+            localStorage.setItem("Ascensions", ascensions)
+        }
         PlayerAttack *= (ascensions+1)
     }
 	
